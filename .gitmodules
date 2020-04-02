@@ -1,0 +1,3 @@
+[submodule "lib/knx"]
+	path = lib/knx
+	url = https://github.com/etrinh/knx.git
