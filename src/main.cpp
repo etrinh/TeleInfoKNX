@@ -18,7 +18,7 @@ struct TeleInfoDataType {
   const unsigned char size;
   const Dpt dpt;
   const unsigned char goSend;
-  const unsigned char paramAddr;
+//  const unsigned char paramAddr;
   bool activeSend = true;
   bool passiveSend = true;
   union {
@@ -28,27 +28,28 @@ struct TeleInfoDataType {
 };
 
 static TeleInfoDataType TeleInfoData[] = {
-  {"ADCO ", TeleInfoDataType::STRING, 12, DPT_String_ASCII, 0, 10},
-  {"OPTARIF ", TeleInfoDataType::STRING, 4, DPT_String_ASCII, 1, 11},
-  {"ISOUSC ", TeleInfoDataType::INT, 2, DPT_Value_Electric_Current, 2, 12},
-  {"BASE ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 3, 13},
-  {"HCHC ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 4, 14},
-  {"HCHP ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 5, 15},
-  {"EJP HN ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 6, 16},
-  {"EJP HPM ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 7, 17},
-  {"BBR HC JB ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 8, 18},
-  {"BBR HP JB ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 9, 19},
-  {"BBR HC Jw ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 10, 20},
-  {"BBR HP JW ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 11, 21},
-  {"BBR HC JR ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 12, 22},
-  {"BBR HP JR ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 13, 23},
-  {"PEJP ", TeleInfoDataType::STRING, 2, DPT_String_ASCII, 14, 24},
-  {"PTEC ", TeleInfoDataType::STRING, 4, DPT_String_ASCII, 15, 25},
-  {"IINST ", TeleInfoDataType::INT, 3, DPT_Value_Electric_Current, 16, 26},
-  {"ADPS ", TeleInfoDataType::INT, 3, DPT_Value_Electric_Current, 17, 27},
-  {"IMAX ", TeleInfoDataType::INT, 3, DPT_Value_Electric_Current, 18, 28},
-  {"PAPP ", TeleInfoDataType::INT, 5, DPT_Value_2_Count, 19, 29},
-  {"HHPHC ", TeleInfoDataType::INT, 1, DPT_Bool, 20, 30}
+  {"ADCO ", TeleInfoDataType::STRING, 12, DPT_String_ASCII, 1},
+  {"OPTARIF ", TeleInfoDataType::STRING, 4, DPT_String_ASCII, 2},
+  {"ISOUSC ", TeleInfoDataType::INT, 2, DPT_Value_Electric_Current, 3},
+  {"BASE ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 4},
+  {"HCHC ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 5},
+  {"HCHP ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 6},
+  {"EJP HN ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 7},
+  {"EJP HPM ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 8},
+  {"BBR HC JB ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 9},
+  {"BBR HP JB ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 10},
+  {"BBR HC Jw ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 11},
+  {"BBR HP JW ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 12},
+  {"BBR HC JR ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 13},
+  {"BBR HP JR ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 14},
+  {"PEJP ", TeleInfoDataType::STRING, 2, DPT_String_ASCII, 15},
+  {"PTEC ", TeleInfoDataType::STRING, 4, DPT_String_ASCII, 16},
+  {"DEMAIN ", TeleInfoDataType::STRING, 4, DPT_String_ASCII, 17},
+  {"IINST ", TeleInfoDataType::INT, 3, DPT_Value_Electric_Current, 18},
+  {"ADPS ", TeleInfoDataType::INT, 3, DPT_Value_Electric_Current, 19},
+  {"IMAX ", TeleInfoDataType::INT, 3, DPT_Value_Electric_Current, 20},
+  {"PAPP ", TeleInfoDataType::INT, 5, DPT_Value_2_Count, 21},
+  {"HHPHC ", TeleInfoDataType::INT, 1, DPT_Bool, 22}
 };
 static const unsigned int TeleInfoCount = sizeof(TeleInfoData)/sizeof(TeleInfoData[0]);
 
@@ -82,7 +83,7 @@ struct TeleInfo
         }
     }
 
-    static void value(TeleInfoDataType& val, String buffer)
+    static void value(TeleInfoDataType& val, const String& buffer)
     {
         unsigned int offset = strlen(val.key);
         if (buffer.length() < offset) return;
@@ -104,7 +105,7 @@ struct TeleInfo
         }
     }
 
-    static bool validChecksum(String buffer)
+    static bool validChecksum(const String& buffer)
     {
         uint16_t sum = 0;
         bool spaceFound = false;
@@ -131,7 +132,7 @@ struct TeleInfo
 
         for (unsigned int index = 0; index < TeleInfoCount; ++index) {
             TeleInfoDataType & data = TeleInfoData[index];
-            char mode = knx.paramByte(data.paramAddr);
+            char mode = ACTIVESEND | PASSIVESEND; // knx.paramByte(data.paramAddr);
             data.activeSend = mode & ACTIVESEND;
             data.passiveSend = mode & PASSIVESEND;
             memset(data.value.str, 0, sizeof(data.value.str));
