@@ -1,195 +1,232 @@
 /*
  * Linky TeleInfo KNX
- * 
- * Emit
- * 
- * Receive on request changes
- * 
- * 
- * 
  */
 
 #include <Arduino.h>
 #include <knx.h>
 
-struct TeleInfoDataType {
-  const char* key;
-  const enum Type { INT, STRING } type;
-  const unsigned char size;
-  const Dpt dpt;
-  const unsigned char goSend;
-//  const unsigned char paramAddr;
-  bool activeSend = true;
-  bool passiveSend = true;
-  union {
-    char str[13];
-    uint32_t num;
-  } value;
-};
+class NullStream : public Stream
+{
+public:
+    virtual int available() { return 0; }
+    virtual int read() { return -1; }
+    virtual int peek() { return -1; }
+    virtual void flush() {}
+    virtual size_t write(uint8_t) { return 0; }
+} nullDevice;
 
-static TeleInfoDataType TeleInfoData[] = {
-  {"ADCO ", TeleInfoDataType::STRING, 12, DPT_String_ASCII, 1},
-  {"OPTARIF ", TeleInfoDataType::STRING, 4, DPT_String_ASCII, 2},
-  {"ISOUSC ", TeleInfoDataType::INT, 2, DPT_Value_Electric_Current, 3},
-  {"BASE ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 4},
-  {"HCHC ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 5},
-  {"HCHP ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 6},
-  {"EJP HN ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 7},
-  {"EJP HPM ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 8},
-  {"BBR HC JB ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 9},
-  {"BBR HP JB ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 10},
-  {"BBR HC Jw ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 11},
-  {"BBR HP JW ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 12},
-  {"BBR HC JR ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 13},
-  {"BBR HP JR ", TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 14},
-  {"PEJP ", TeleInfoDataType::STRING, 2, DPT_String_ASCII, 15},
-  {"PTEC ", TeleInfoDataType::STRING, 4, DPT_String_ASCII, 16},
-  {"DEMAIN ", TeleInfoDataType::STRING, 4, DPT_String_ASCII, 17},
-  {"IINST ", TeleInfoDataType::INT, 3, DPT_Value_Electric_Current, 18},
-  {"ADPS ", TeleInfoDataType::INT, 3, DPT_Value_Electric_Current, 19},
-  {"IMAX ", TeleInfoDataType::INT, 3, DPT_Value_Electric_Current, 20},
-  {"PAPP ", TeleInfoDataType::INT, 5, DPT_Value_2_Count, 21},
-  {"HHPHC ", TeleInfoDataType::INT, 1, DPT_Bool, 22}
+struct TeleInfoDataType {
+  const __FlashStringHelper* key;
+  unsigned char keySize;
+  enum Type : uint8_t { INT, STRING } type;
+  unsigned char size;
+  struct { short mainGroup; short subGroup; } dpt;
+  unsigned char goSend;
+  bool activeSend;
 };
-static const unsigned int TeleInfoCount = sizeof(TeleInfoData)/sizeof(TeleInfoData[0]);
+#define Dpt(M,S)    { M, S }
+const TeleInfoDataType TeleInfoParam[] PROGMEM = {
+  { F("ADCO "), 5, TeleInfoDataType::STRING, 12, DPT_String_ASCII, 1, false },
+  { F("OPTARIF "), 8, TeleInfoDataType::STRING, 4, DPT_String_ASCII, 2, false },
+  { F("ISOUSC "), 7, TeleInfoDataType::INT, 2, DPT_Value_Electric_Current, 3, false },
+  { F("BASE "), 5, TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 4, true },
+  { F("HCHC "), 5, TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 5, true },
+  { F("HCHP "), 5, TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 6, true },
+  { F("EJP HN "), 7, TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 7, true },
+  { F("EJP HPM "), 8, TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 8, true },
+  { F("BBR HC JB "), 9, TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 9, true },
+  { F("BBR HP JB "), 9, TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 10, true },
+  { F("BBR HC JW "), 9, TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 11, true },
+  { F("BBR HP JW "), 9, TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 12, true },
+  { F("BBR HC JR "), 9, TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 13, true },
+  { F("BBR HP JR "), 9, TeleInfoDataType::INT, 9, DPT_ActiveEnergy, 14, true },
+  { F("PEJP "), 5, TeleInfoDataType::STRING, 2, DPT_String_ASCII, 15, true },
+  { F("PTEC "), 5, TeleInfoDataType::STRING, 4, DPT_String_ASCII, 16, true },
+  { F("DEMAIN "), 7, TeleInfoDataType::STRING, 4, DPT_String_ASCII, 17, true },
+  { F("IINST "), 6, TeleInfoDataType::INT, 3, DPT_Value_Electric_Current, 18, true },
+  { F("ADPS "), 5, TeleInfoDataType::INT, 3, DPT_Value_Electric_Current, 19, true },
+  { F("IMAX "), 5, TeleInfoDataType::INT, 3, DPT_Value_Electric_Current, 20, true },
+  { F("PAPP "), 5, TeleInfoDataType::INT, 5, DPT_Value_2_Count, 21, true },
+  { F("HHPHC "), 6, TeleInfoDataType::INT, 1, DPT_Bool, 22, true }
+};
+#undef Dpt
+const unsigned int TeleInfoCount = sizeof(TeleInfoParam)/sizeof(TeleInfoParam[0]);
 
 #define PIN_PROG_SWITCH   PB5
 #define PIN_PROG_LED      PA4
 #define PIN_TELE_RX       PA3
-#define PIN_TELE_TX       PA2   // Unused
+#define PIN_TELE_TX       PA2   // Unconnected
 #define PIN_TPUART_RX     PB6   // stm32 knx uses Serial2 (pins 16,17)
 #define PIN_TPUART_TX     PB7
 #define PIN_TPUART_SAVE   PB3   // Unused
 #define PIN_TPUART_RESET  PB4   // Unused
 
-#define ACTIVESEND        1
-#define PASSIVESEND       2
+#define BUFFERSIZE        512U
+
+#define PROG_TIMEOUT      ( 1/*5*/ * 60 * 1000 )    // 15 mins
 
 #define MIN(X,Y)    ((X)<(Y)?(X):(Y))
 #define MAX(X,Y)    ((X)>(Y)?(X):(Y))
 
-struct TeleInfo
+class TeleInfo
 {
-    HardwareSerial serial = HardwareSerial(PIN_TELE_RX, PIN_TELE_TX);
-    static KNXValue value(const TeleInfoDataType& val)
+    HardwareSerial mSerial = HardwareSerial(PIN_TELE_RX, PIN_TELE_TX);
+    char mBuffer[BUFFERSIZE];    // No '\0'
+    int mBufferLen = 0;
+
+    // Hold the memory buffer for all teleinfo
+    struct TeleInfoDataStruct
     {
-        switch (val.type) {
-            case TeleInfoDataType::STRING: {
-                return KNXValue(val.value.str);
-            }; break;
-            default: {
-                return KNXValue(val.value.num);
-            }; break;
+        const TeleInfoDataType* conf; 
+        union {
+            char str[13] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            uint32_t num;
+        } value;
+    } mTeleInfoData[TeleInfoCount];
+
+    static inline KNXValue value(const TeleInfoDataStruct& val)
+    {
+        if (val.conf->type == TeleInfoDataType::STRING) {
+            return KNXValue(val.value.str);
+        }
+        else {
+            return KNXValue(val.value.num);
         }
     }
 
-    static void value(TeleInfoDataType& val, const String& buffer)
+    static inline bool value(TeleInfoDataStruct& val, const char* begin, const char* end)
     {
-        unsigned int offset = strlen(val.key);
-        if (buffer.length() < offset) return;
-        unsigned int size = MIN(buffer.length() - offset, val.size);
-        if (val.type == TeleInfoDataType::STRING) {
-            memcpy(val.value.str, buffer.c_str(), size);
-            val.value.str[size] = '\0';
-        }
-        else if (val.type == TeleInfoDataType::INT) {
-            uint32_t value = 0;
-            for (unsigned int i = 0; i < size; ++i) {
-                char v = buffer[offset + i];
-                if (v >= '0' && v <= '9') {
-                    value = value * 10 + (v-'0');
+        begin += val.conf->keySize;
+        if (begin < end) {
+            unsigned int size = MIN(end - begin, val.conf->size);
+            if (val.conf->type == TeleInfoDataType::STRING) {
+                if (memcmp(val.value.str, begin, size) != 0 && val.value.str[size] == '\0') {
+                    memcpy(val.value.str, begin, size);
+                    val.value.str[size] = '\0';
+                    return true;
                 }
-                else break;
             }
-            val.value.num = value;
+            else {
+                uint32_t value = 0;
+                end = begin + size;
+                for (; begin != end; ++begin) {
+                    const unsigned char v = (const unsigned char)(*begin - '0');
+                    if (v > 9) break;
+                    value = value * 10 + v;
+                }
+                if (val.value.num != value) {
+                    val.value.num = value;
+                    return true;
+                }
+            }
         }
+        return false;
     }
 
-    static bool validChecksum(const String& buffer)
+    static inline bool validChecksum(const char* begin, const char* end)
     {
         uint16_t sum = 0;
         bool spaceFound = false;
-        unsigned int checksumOffset = 0;
-        for (unsigned int i = 0; i < buffer.length(); ++i) { // from start and stop when second space for checsum is found
-            char c = buffer.charAt(i);
+        --end;
+        for (; begin != end;) {
+            const char c = *begin++;
             if (c == ' ') {
-                if (spaceFound) {
-                    checksumOffset = i + 1;
-                    break;
+                if (spaceFound) {   // checksum after second space
+                    return (((char)sum & 0x3F) + 0x20) == *begin;
                 }
                 spaceFound = true;
             }
             sum += c;
         }
-        sum = (sum & 0x3F) + 0x20;
-        return sum == buffer.charAt(checksumOffset);
+        return false;
     }
 
+public:
     void init()
     {
         // Init Serial
-        serial.begin(1200, SERIAL_7E1);
+        mSerial.begin(1200, SERIAL_7E1);
 
-        for (unsigned int index = 0; index < TeleInfoCount; ++index) {
-            TeleInfoDataType & data = TeleInfoData[index];
-            char mode = ACTIVESEND | PASSIVESEND; // knx.paramByte(data.paramAddr);
-            data.activeSend = mode & ACTIVESEND;
-            data.passiveSend = mode & PASSIVESEND;
-            memset(data.value.str, 0, sizeof(data.value.str));
-            knx.getGroupObject(data.goSend).dataPointType(data.dpt);
-            if (data.passiveSend) {
-                knx.getGroupObject(data.goSend).callback([&data](GroupObject& go) {
-                    go.value(value(data));
-                });
-            }
+        const TeleInfoDataType* param = TeleInfoParam;
+        for (TeleInfoDataStruct * data = mTeleInfoData; data != mTeleInfoData + TeleInfoCount; ++data, ++ param) {
+            data->conf = param;
+            knx.getGroupObject(data->conf->goSend).dataPointType(Dpt(data->conf->dpt.mainGroup, data->conf->dpt.subGroup));
+            knx.getGroupObject(data->conf->goSend).callback([data](GroupObject& go) {
+                go.value(value(*data));
+            });
         }
     }
-  
+
     void loop()
     {
-        static String buffer;
-
-        // read buffer
-        // check buffer
-        if (serial.available() == 0)
-            return;
-        buffer += serial.readString();
-        if (buffer.length() > 512)
-            buffer = String();
-
-        // extract first line if any
-        String line;
-        int eol = buffer.indexOf('\x0d');
-        if (eol >= 0) {
-            line = buffer.substring(0, eol);
-            buffer = buffer.substring(eol + 1);
-        }
-        if (!TeleInfo::validChecksum(line))
-            return;
-        for (unsigned int index = 0; index < TeleInfoCount; ++index) {
-            TeleInfoDataType & data = TeleInfoData[index];
-            if (line.startsWith(data.key)) {
-                TeleInfo::value(data, line);
-                if (data.activeSend) {
-                    knx.getGroupObject(data.goSend).value(TeleInfo::value(data));
-                }
+        for (;;) {
+            unsigned int pending = mSerial.available();
+            if (pending == 0)
                 break;
+
+            digitalWrite(PIN_PROG_LED, HIGH);
+            for (;;) {
+                if (mBufferLen == BUFFERSIZE)
+                    mBufferLen = 0;  // Security - Reset buffer if full with dummies
+                unsigned int rcv = 0;
+                char* ptr = mBuffer + mBufferLen;
+                while (rcv < MIN(BUFFERSIZE - mBufferLen, pending)) {
+                    int c = mSerial.read();
+                    if (c < 0) {
+                        break;
+                    }
+                    *ptr++ = (char)c;
+                    ++rcv;
+                }
+                if (rcv == 0)
+                    break;
+                pending -= rcv;
+                mBufferLen += rcv;
+                const char* currentBuffer = mBuffer;
+                for (;;) {
+                    // extract first line if 
+                    const char* eol = currentBuffer;
+                    for (; eol != mBuffer + mBufferLen; ++eol) {
+                        if (*eol == '\x0d') {
+                            break;
+                        }
+                    }
+                    if(eol == mBuffer + mBufferLen)
+                        break;
+                    // search first valid character
+                    for (; currentBuffer != eol; ++currentBuffer) {
+                        const char c = *currentBuffer;
+                        if ((c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == ' ') {
+                            break;
+                        }
+                    }
+                    const unsigned int lineLen = eol - currentBuffer;
+                    if (TeleInfo::validChecksum(currentBuffer, eol)) {
+                        for (TeleInfoDataStruct * data = mTeleInfoData; data != mTeleInfoData + TeleInfoCount; ++data) {
+                            if (lineLen > data->conf->keySize && memcmp(currentBuffer, data->conf->key, data->conf->keySize) == 0) {
+                                if (TeleInfo::value(*data, currentBuffer, eol) && data->conf->activeSend) {
+                                    knx.getGroupObject(data->conf->goSend).value(TeleInfo::value(*data));
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    currentBuffer = eol + 1;
+                }
+                mBufferLen -= currentBuffer - mBuffer;
+                memmove(mBuffer, currentBuffer, mBufferLen);
             }
+            digitalWrite(PIN_PROG_LED, LOW);
         }
     }
-} teleinfo;
+};
+TeleInfo teleinfo;
 
 void setup()
 {
-#if defined(ARDUINO_ARCH_ESP32) || defined(ARDUINO_ARCH_ESP8266)
-    WiFi.mode(WIFI_OFF);
- #if defined(ARDUINO_ARCH_ESP32)
-    btStop();
- #endif
-#endif
-    Serial2.setRx(PIN_TPUART_RX);
-    Serial2.setTx(PIN_TPUART_TX);
-    Serial2.begin(19200, SERIAL_8E1);   // Or 9N1 for register read (see datasheet p26)?
+    ArduinoPlatform::SerialDebug = &nullDevice;
+    static HardwareSerial serialTpuart(PIN_TPUART_TX, PIN_TPUART_RX);
+    knx.platform().knxUart(&serialTpuart);
     knx.ledPin(PIN_PROG_LED);
     knx.ledPinActiveOn(HIGH);
     knx.buttonPin(PIN_PROG_SWITCH);
@@ -212,13 +249,23 @@ void loop()
     knx.loop();
 
     // only run the application code if the device was configured with ETS
-    if(!knx.configured())
-        return;
+    if(knx.configured()) {
+        teleinfo.loop();
+    }
 
-    static unsigned long lastTime = 0;
-    unsigned long time = millis();
-    if (time - lastTime < 10)
-        return;
-    teleinfo.loop();
-    lastTime = time;
+    static uint32_t timerProgMode = 0;
+    if (knx.progMode()) {
+        if (timerProgMode == 0) {
+            timerProgMode = millis();
+        }
+        else {
+            if (millis() - timerProgMode > PROG_TIMEOUT) {
+                knx.progMode(false);
+                timerProgMode = 0;
+            }
+        }
+    }
+    else {
+        timerProgMode = 0;
+    }
 }
