@@ -5,6 +5,23 @@
 #include <Arduino.h>
 #include <knx.h>
 
+#define MIN(X,Y)    ((X)<(Y)?(X):(Y))
+#define MAX(X,Y)    ((X)>(Y)?(X):(Y))
+
+#define PIN_PROG_SWITCH   PB5
+#define PIN_PROG_LED      PA4
+#define PROG_TIMEOUT      ( 15 * 60 * 1000 )    // 15 mins
+#define PIN_TPUART_RX     PB6   // stm32 knx uses Serial2 (pins 16,17)
+#define PIN_TPUART_TX     PB7
+#define PIN_TPUART_SAVE   PB3   // Unused
+#define PIN_TPUART_RESET  PB4   // Unused
+
+#define PIN_TELE_RX       PA3
+#define PIN_TELE_TX       PA2   // Unconnected
+
+#define BUFFERSIZE        512U
+
+
 class NullStream : public Stream
 {
 public:
@@ -51,22 +68,6 @@ const TeleInfoDataType TeleInfoParam[] PROGMEM = {
 };
 #undef Dpt
 const unsigned int TeleInfoCount = sizeof(TeleInfoParam)/sizeof(TeleInfoParam[0]);
-
-#define PIN_PROG_SWITCH   PB5
-#define PIN_PROG_LED      PA4
-#define PIN_TELE_RX       PA3
-#define PIN_TELE_TX       PA2   // Unconnected
-#define PIN_TPUART_RX     PB6   // stm32 knx uses Serial2 (pins 16,17)
-#define PIN_TPUART_TX     PB7
-#define PIN_TPUART_SAVE   PB3   // Unused
-#define PIN_TPUART_RESET  PB4   // Unused
-
-#define BUFFERSIZE        512U
-
-#define PROG_TIMEOUT      ( 1/*5*/ * 60 * 1000 )    // 15 mins
-
-#define MIN(X,Y)    ((X)<(Y)?(X):(Y))
-#define MAX(X,Y)    ((X)>(Y)?(X):(Y))
 
 class TeleInfo
 {
@@ -151,9 +152,6 @@ public:
         for (TeleInfoDataStruct * data = mTeleInfoData; data != mTeleInfoData + TeleInfoCount; ++data, ++ param) {
             data->conf = param;
             knx.getGroupObject(data->conf->goSend).dataPointType(Dpt(data->conf->dpt.mainGroup, data->conf->dpt.subGroup));
-            knx.getGroupObject(data->conf->goSend).callback([data](GroupObject& go) {
-                go.value(value(*data));
-            });
         }
     }
 
