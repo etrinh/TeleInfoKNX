@@ -145,8 +145,29 @@ class TeleInfo
 public:
     void init()
     {
-        // Init Serial
-        mSerial.begin(1200, SERIAL_7E1);
+        // Init Serial (Framing error issue with 1200baud seems working in [1221,1325] range - mid 1273)
+#if 1
+        int bestBaud = 1273;
+#else
+        int minFE = 0x7fffffff, bestBaud = 1200;
+        for (int baud = 1000; baud < 1400; baud += 10) {
+            mSerial.begin(baud, SERIAL_7E1);
+            int FE = 0;
+            for (int i = 0; i < 16; ++i) {
+                while (!mSerial.available()) { delay(1); }
+                int c = mSerial.read();
+                if (c <= 0) {
+                    ++FE;
+                }
+            }
+            if (FE < minFE) { 
+                minFE = FE;
+                bestBaud = baud;
+            }
+            mSerial.end();
+        }
+#endif
+        mSerial.begin(bestBaud, SERIAL_7E1);
 
         const TeleInfoDataType* param = TeleInfoParam;
         for (TeleInfoDataStruct * data = mTeleInfoData; data != mTeleInfoData + TeleInfoCount; ++data, ++ param) {
@@ -162,8 +183,7 @@ public:
             if (pending == 0)
                 break;
 
-            digitalWrite(PIN_PROG_LED, HIGH);
-            for (;;) {
+            while (pending > 0) {
                 if (mBufferLen == BUFFERSIZE)
                     mBufferLen = 0;  // Security - Reset buffer if full with dummies
                 unsigned int rcv = 0;
@@ -214,7 +234,6 @@ public:
                 mBufferLen -= currentBuffer - mBuffer;
                 memmove(mBuffer, currentBuffer, mBufferLen);
             }
-            digitalWrite(PIN_PROG_LED, LOW);
         }
     }
 };
@@ -229,6 +248,16 @@ void setup()
     knx.ledPinActiveOn(HIGH);
     knx.buttonPin(PIN_PROG_SWITCH);
     knx.buttonPinInterruptOn(RISING);
+
+    // Init device
+    knx.version(1);                                         // PID_VERSION
+    static const uint8_t orderNumber = 0;
+    knx.orderNumber(&orderNumber);                          // PID_ORDER_INFO
+    // knx.manufacturerId(0xfa);                               // PID_SERIAL_NUMBER (2 first bytes) - 0xfa for KNX Association
+    knx.bauNumber(0x4c4e4b59 /* = 'LNKY'*/);     // PID_SERIAL_NUMBER (4 last bytes)
+    static const uint8_t hardwareType [] = { 0, 0, 0, 0, 0, 0 };
+    knx.hardwareType(hardwareType);                         // PID_HARDWARE_TYPE
+    knx.bau().deviceObject().induvidualAddress(1);
 
     // read adress table, association table, groupobject table and parameters from eeprom
     knx.readMemory();
