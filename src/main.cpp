@@ -19,6 +19,7 @@
 #define PIN_TELE_RX       PA3
 #define PIN_TELE_TX       PA2   // Unconnected
 
+#define ADJ_UART_SPEED    1273
 #define BUFFERSIZE        512U
 
 
@@ -74,6 +75,7 @@ class TeleInfo
     HardwareSerial mSerial = HardwareSerial(PIN_TELE_RX, PIN_TELE_TX);
     char mBuffer[BUFFERSIZE];    // No '\0'
     int mBufferLen = 0;
+    int mFrameErrorCount = 0;
 
     // Hold the memory buffer for all teleinfo
     struct TeleInfoDataStruct
@@ -142,18 +144,15 @@ class TeleInfo
         return false;
     }
 
-public:
-    void init()
-    {
-        // Init Serial (Framing error issue with 1200baud seems working in [1221,1325] range - mid 1273)
-#if 1
-        int bestBaud = 1273;
-#else
-        int minFE = 0x7fffffff, bestBaud = 1200;
-        for (int baud = 1000; baud < 1400; baud += 10) {
+    inline void calibrateUart() {
+        // Find best Serial Speed (Framing error issue with 1200baud seems working in [1221,1325] range - mid 1273)
+        const int start = 1100, end = 1400;
+        int minFE = 0x7fffffff, bestBaudStart = start, bestBaudEnd = end;
+        for (int baud = start; baud < end; baud += 20) {
+            digitalWrite(PIN_PROG_LED, HIGH);
             mSerial.begin(baud, SERIAL_7E1);
             int FE = 0;
-            for (int i = 0; i < 16; ++i) {
+            for (int i = 0; i < 16 && FE < minFE; ++i) {
                 while (!mSerial.available()) { delay(1); }
                 int c = mSerial.read();
                 if (c <= 0) {
@@ -162,12 +161,20 @@ public:
             }
             if (FE < minFE) { 
                 minFE = FE;
-                bestBaud = baud;
+                bestBaudStart = baud;
+            }
+            if (FE == minFE) {
+                bestBaudEnd = baud;
             }
             mSerial.end();
+            digitalWrite(PIN_PROG_LED, LOW);
         }
-#endif
-        mSerial.begin(bestBaud, SERIAL_7E1);
+        mSerial.begin((bestBaudEnd + bestBaudStart) / 2, SERIAL_7E1);
+    }
+public:
+    void init()
+    {
+        mSerial.begin(ADJ_UART_SPEED, SERIAL_7E1);
 
         const TeleInfoDataType* param = TeleInfoParam;
         for (TeleInfoDataStruct * data = mTeleInfoData; data != mTeleInfoData + TeleInfoCount; ++data, ++ param) {
@@ -184,8 +191,12 @@ public:
                 break;
 
             while (pending > 0) {
-                if (mBufferLen == BUFFERSIZE)
+                if (mBufferLen == BUFFERSIZE) {
                     mBufferLen = 0;  // Security - Reset buffer if full with dummies
+                    // Recalibrate UART, maybe framing error
+                    calibrateUart();
+                    break;
+                }
                 unsigned int rcv = 0;
                 char* ptr = mBuffer + mBufferLen;
                 while (rcv < MIN(BUFFERSIZE - mBufferLen, pending)) {
