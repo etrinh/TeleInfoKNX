@@ -1,120 +1,245 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<KNX xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" CreatedBy="KNX MT" ToolVersion="5.1.255.16695" xmlns="http://knx.org/xml/project/11">
+<KNX xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" CreatedBy="KNX MT" ToolVersion="5.1.255.16695" xmlns="http://knx.org/xml/project/20">
   <ManufacturerData>
     <Manufacturer RefId="M-00FA">
       <Catalog>
         <CatalogSection Id="M-00FA_CS-1" Name="Devices" Number="1" DefaultLanguage="fr">
-          <CatalogItem Id="M-00FA_H-LNKY-1_HP-0001-01-0000_CI-1-1" Name="TELEINFO" Number="1" ProductRefId="M-00FA_H-LNKY-1_P-1" Hardware2ProgramRefId="M-00FA_H-LNKY-1_HP-0001-01-0000" DefaultLanguage="fr" />
+          <CatalogItem Id="M-00FA_H-ZDI.2DTELEINFO-1_HP-0001-10-0000_CI-ZDI.2DTINFO1-1" Name="TELEINFO" Number="1" ProductRefId="M-00FA_H-ZDI.2DTELEINFO-1_P-ZDI.2DTINFO1" Hardware2ProgramRefId="M-00FA_H-ZDI.2DTELEINFO-1_HP-0001-10-0000" DefaultLanguage="fr" />
         </CatalogSection>
       </Catalog>
       <ApplicationPrograms>
-        <ApplicationProgram Id="M-00FA_A-0001-01-0000" ApplicationNumber="1" ApplicationVersion="1" ProgramType="ApplicationProgram" MaskVersion="MV-07B0" Name="TELEINFO" LoadProcedureStyle="MergedProcedure" PeiType="0" DefaultLanguage="fr" DynamicTableManagement="false" Linkable="false" MinEtsVersion="4.0">
+        <ApplicationProgram Id="M-00FA_A-0001-10-0000" ApplicationNumber="1" ApplicationVersion="16" ProgramType="ApplicationProgram" MaskVersion="MV-07B0" Name="TELEINFO 1.0" LoadProcedureStyle="MergedProcedure" PeiType="0" DefaultLanguage="fr" DynamicTableManagement="false" Linkable="false" MinEtsVersion="4.0" Hash="kkU5cPej1JBuAeD5hCVkkA==">
           <Static>
             <Code>
-              <RelativeSegment Id="M-00FA_A-0001-01-0000_RS-04-00000" Name="Parameters" Offset="0" Size="0" LoadStateMachine="4" />
+              <RelativeSegment Id="M-00FA_A-0001-10-0000_RS-04-00000" Name="Parameters" Size="12" LoadStateMachine="4" Offset="0" />
             </Code>
-            <Parameters />
+            <ParameterTypes>
+              <ParameterType Id="M-00FA_A-0001-10-0000_PT-ShortPeriodTypeInSeconds" Name="ShortPeriodTypeInSeconds">
+                <TypeNumber SizeInBit="32" Type="signedInt" minInclusive="0" maxInclusive="86400" />
+              </ParameterType>
+              <ParameterType Id="M-00FA_A-0001-10-0000_PT-LongPeriodTypeInMinutes" Name="LongPeriodTypeInMinutes">
+                <TypeNumber SizeInBit="32" Type="signedInt" minInclusive="0" maxInclusive="10080" />
+              </ParameterType>
+            </ParameterTypes>
+            <Parameters>
+              <Parameter Id="M-00FA_A-0001-10-0000_P-1" Name="Synchronisation Heure" ParameterType="M-00FA_A-0001-10-0000_PT-LongPeriodTypeInMinutes" Text="Délais maximum en minutes avant une demande de synchronisation d'heure et de date (0 = pas de temporisation)" Value="60">
+                <Memory CodeSegment="M-00FA_A-0001-10-0000_RS-04-00000" Offset="0" BitOffset="0" />
+              </Parameter>
+              <Parameter Id="M-00FA_A-0001-10-0000_P-2" Name="Période d'émission" ParameterType="M-00FA_A-0001-10-0000_PT-ShortPeriodTypeInSeconds" Text="Latence en secondes entre l'envoi de 2 messages (0 = pas de temporisation)" Value="60">
+                <Memory CodeSegment="M-00FA_A-0001-10-0000_RS-04-00000" Offset="4" BitOffset="0" />
+              </Parameter>
+              <Parameter Id="M-00FA_A-0001-10-0000_P-3" Name="Temporisation Mode Temps Réel" ParameterType="M-00FA_A-0001-10-0000_PT-LongPeriodTypeInMinutes" Text="Durée maximale en minutes du mode Temps Réel: Permet l'envoi immédiat des informations (0 = pas de temporisation)" Value="15">
+                <Memory CodeSegment="M-00FA_A-0001-10-0000_RS-04-00000" Offset="8" BitOffset="0" />
+              </Parameter>
+            </Parameters>
+            <ParameterRefs>
+              <ParameterRef Id="M-00FA_A-0001-10-0000_P-1_R-1" RefId="M-00FA_A-0001-10-0000_P-1" />
+              <ParameterRef Id="M-00FA_A-0001-10-0000_P-2_R-2" RefId="M-00FA_A-0001-10-0000_P-2" />
+              <ParameterRef Id="M-00FA_A-0001-10-0000_P-3_R-3" RefId="M-00FA_A-0001-10-0000_P-3" />
+            </ParameterRefs>
             <ComObjectTable>
-              <ComObject Id="M-00FA_A-0001-01-0000_O-1" Name="Identifiant compteur" Text="Identifiant compteur" Number="1" FunctionText="N° d’identification du compteur" ObjectSize="14 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
-              <ComObject Id="M-00FA_A-0001-01-0000_O-2" Name="Option tarifaire" Text="Option tarifaire" Number="2" FunctionText="Option tarifaire (type d’abonnement)" ObjectSize="14 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
-              <ComObject Id="M-00FA_A-0001-01-0000_O-3" Name="Intensité souscrite" Text="Intensité souscrite" Number="3" FunctionText="Intensité souscrite" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
-              <ComObject Id="M-00FA_A-0001-01-0000_O-4" Name="Index" Text="Index" Number="4" FunctionText="Index si option" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
-              <ComObject Id="M-00FA_A-0001-01-0000_O-5" Name="Index heures creuses" Text="Index heures creuses" Number="5" FunctionText="Index heures creuses si option" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
-              <ComObject Id="M-00FA_A-0001-01-0000_O-6" Name="Index heures pleines" Text="Index heures pleines" Number="6" FunctionText="Index heures pleines si option" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
-              <ComObject Id="M-00FA_A-0001-01-0000_O-7" Name="Index heures normales" Text="Index heures normales" Number="7" FunctionText="Index heures normales si option" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
-              <ComObject Id="M-00FA_A-0001-01-0000_O-8" Name="Index heures de pointe mobile" Text="Index heures de pointe mobile" Number="8" FunctionText="Index heures de pointe mobile si option" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
-              <ComObject Id="M-00FA_A-0001-01-0000_O-9" Name="Index heures creuses jours bleus" Text="Index heures creuses jours bleus" Number="9" FunctionText="Index heures creuses jours bleus si option" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
-              <ComObject Id="M-00FA_A-0001-01-0000_O-10" Name="Index heures pleines jours bleus" Text="Index heures pleines jours bleus" Number="10" FunctionText="Index heures pleines jours bleus si option" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
-              <ComObject Id="M-00FA_A-0001-01-0000_O-11" Name="Index heures creuses jours blancs" Text="Index heures creuses jours blancs" Number="11" FunctionText="Index heures creuses jours blancs si option" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
-              <ComObject Id="M-00FA_A-0001-01-0000_O-12" Name="Index heures pleines jours blancs" Text="Index heures pleines jours blancs" Number="12" FunctionText="Index heures pleines jours blancs si option" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
-              <ComObject Id="M-00FA_A-0001-01-0000_O-13" Name="Index heures creuses jours rouges" Text="Index heures creuses jours rouges" Number="13" FunctionText="Index heures creuses jours rouges si option" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
-              <ComObject Id="M-00FA_A-0001-01-0000_O-14" Name="Index heures pleines jours rouges" Text="Index heures pleines jours rouges" Number="14" FunctionText="Index heures pleines jours rouges si option" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
-              <ComObject Id="M-00FA_A-0001-01-0000_O-15" Name="Préavis EJP" Text="Préavis EJP" Number="15" FunctionText="Préavis EJP si option" ObjectSize="14 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
-              <ComObject Id="M-00FA_A-0001-01-0000_O-16" Name="Période tarifaire en cours" Text="Période tarifaire en cours" Number="16" FunctionText="Période tarifaire en cours" ObjectSize="14 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
-              <ComObject Id="M-00FA_A-0001-01-0000_O-17" Name="Couleur du lendemain" Text="Couleur du lendemain" Number="17" FunctionText="Couleur du lendemain si option" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
-              <ComObject Id="M-00FA_A-0001-01-0000_O-18" Name="Intensité instantanée" Text="Intensité instantanée" Number="18" FunctionText="Intensité instantanée" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
-              <ComObject Id="M-00FA_A-0001-01-0000_O-19" Name="Avertissement de dépassement" Text="Avertissement de dépassement" Number="19" FunctionText="Avertissement de dépassement de puissance souscrite" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
-              <ComObject Id="M-00FA_A-0001-01-0000_O-20" Name="Intensité maximale" Text="Intensité maximale" Number="20" FunctionText="Intensité maximale" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
-              <ComObject Id="M-00FA_A-0001-01-0000_O-21" Name="Puissance apparente" Text="Puissance apparente" Number="21" FunctionText="Puissance apparente  (VA)" ObjectSize="2 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
-              <ComObject Id="M-00FA_A-0001-01-0000_O-22" Name="Groupe horaire" Text="Groupe horaire" Number="22" FunctionText="Groupe horaire si option = heures creuses ou tempo" ObjectSize="1 Bit" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-1" Name="Date" Text="Date" Number="1" FunctionText="Date" ObjectSize="3 Bytes" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-2" Name="Heure" Text="Heure" Number="2" FunctionText="Heure" ObjectSize="3 Bytes" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-3" Name="Date et Heure" Text="Date et Heure" Number="3" FunctionText="Date et Heure" ObjectSize="8 Bytes" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Enabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-4" Name="Etat Date et Heure" Text="Etat Date et Heure" Number="4" FunctionText="Etat Date et Heure (non fiable)" ObjectSize="8 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-5" Name="Mode Temps Réel" Text="Mode Temps Réel" Number="5" FunctionText="Activation/Désactivation du mode Temps Réel" ObjectSize="1 Bit" ReadFlag="Disabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Disabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-6" Name="Etat Mode Temps Réel" Text="Etat Mode Temps Réel" Number="6" FunctionText="Etat du mode Temps Réel" ObjectSize="1 Bit" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-7" Name="Consommation Aujourd'hui" Text="Consommation Aujourd'hui" Number="7" FunctionText="Consommation totale depuis le début de la journée (Wh)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-8" Name="Consommation Hier" Text="Consommation Hier" Number="8" FunctionText="Consommation totale de la journée d'hier (Wh)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-9" Name="Consommation Mois Courant" Text="Consommation Mois Courant" Number="9" FunctionText="Consommation totale depuis le début du mois (Wh)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-10" Name="Consommation Mois Précédent" Text="Consommation Mois Précédent" Number="10" FunctionText="Consommation totale du mois précédent (Wh)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-11" Name="Consommation Année Courante" Text="Consommation Année Courante" Number="11" FunctionText="Consommation totale depuis le début de l'année (Wh)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-12" Name="Consommation Année Précédente" Text="Consommation Année Précédente" Number="12" FunctionText="Consommation totale de l'année précédente (Wh)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-13" Name="Consommation Aujourd'hui HC/HN" Text="Consommation Aujourd'hui HC/HN" Number="13" FunctionText="Consommation Aujourd'hui (Heures Creuses (HC/Tempo) ou Heures Normales (EJP)) (Wh)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-14" Name="Consommation Hier HC/HN" Text="Consommation Hier HC/HN" Number="14" FunctionText="Consommation Hier (Heures Creuses (HC/Tempo) ou Heures Normales (EJP)) (Wh)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-15" Name="Consommation Mois Courant HC/HN" Text="Consommation Mois Courant HC/HN" Number="15" FunctionText="Consommation Mois Courant (Heures Creuses (HC/Tempo) ou Heures Normales (EJP)) (Wh)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-16" Name="Consommation Mois Précédent HC/HN" Text="Consommation Mois Précédent HC/HN" Number="16" FunctionText="Consommation Mois Précédent (Heures Creuses (HC/Tempo) ou Heures Normales (EJP)) (Wh)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-17" Name="Consommation Année Courante HC/HN" Text="Consommation Année Courante HC/HN" Number="17" FunctionText="Consommation Année Courante (Heures Creuses (HC/Tempo) ou Heures Normales (EJP)) (Wh)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-18" Name="Consommation Année Précédente HC/HN" Text="Consommation Année Précédente HC/HN" Number="18" FunctionText="Consommation Année Précédente (Heures Creuses (HC/Tempo) ou Heures Normales (EJP)) (Wh)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-19" Name="Consommation Aujourd'hui HP/HPM" Text="Consommation Aujourd'hui HP/HPM" Number="19" FunctionText="Consommation Aujourd'hui (Heures Pleines (HC/Tempo) ou Heures Pointes Mobiles (EJP)) (Wh)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-20" Name="Consommation Hier HP/HPM" Text="Consommation Hier HP/HPM" Number="20" FunctionText="Consommation Hier (Heures Pleines (HC/Tempo) ou Heures Pointes Mobiles (EJP)) (Wh)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-21" Name="Consommation Mois Courant HP/HPM" Text="Consommation Mois Courant HP/HPM" Number="21" FunctionText="Consommation Mois Courant (Heures Pleines (HC/Tempo) ou Heures Pointes Mobiles (EJP)) (Wh)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-22" Name="Consommation Mois Précédent HP/HPM" Text="Consommation Mois Précédent HP/HPM" Number="22" FunctionText="Consommation Mois Précédent (Heures Pleines (HC/Tempo) ou Heures Pointes Mobiles (EJP)) (Wh)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-23" Name="Consommation Année Courante HP/HPM" Text="Consommation Année Courante HP/HPM" Number="23" FunctionText="Consommation Année Courante (Heures Pleines (HC/Tempo) ou Heures Pointes Mobiles (EJP)) (Wh)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-24" Name="Consommation Année Précédente HP/HPM" Text="Consommation Année Précédente HP/HPM" Number="24" FunctionText="Consommation Année Précédente (Heures Pleines (HC/Tempo) ou Heures Pointes Mobiles (EJP)) (Wh)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Enabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-25" Name="Identifiant compteur" Text="Identifiant compteur" Number="25" FunctionText="N° d’identification du compteur" ObjectSize="14 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-26" Name="Option tarifaire" Text="Option tarifaire" Number="26" FunctionText="Option tarifaire (type d’abonnement): 0=Base, 1=HC, 2=EJP, 48-63:Tempo (bit 5: Toujours 1, bits 4 et 3 (01 à 11): Programme circuit 1/A-C, bits 2 à 0: programme circuit 2/P0-P7)" ObjectSize="1 Byte" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-27" Name="Intensité souscrite" Text="Intensité souscrite" Number="27" FunctionText="Intensité souscrite (A)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-28" Name="Index" Text="Index" Number="28" FunctionText="Index (si option Base) (Wh)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-29" Name="Index heures creuses" Text="Index heures creuses" Number="29" FunctionText="Index heures creuses (si option Heures Creuses) (Wh)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-30" Name="Index heures pleines" Text="Index heures pleines" Number="30" FunctionText="Index heures pleines (si option Heures Creuses) (Wh)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-31" Name="Index heures normales" Text="Index heures normales" Number="31" FunctionText="Index heures normales (si option EJP) (Wh)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-32" Name="Index heures de pointe mobile" Text="Index heures de pointe mobile" Number="32" FunctionText="Index heures de pointe mobile (si option EJP) (Wh)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-33" Name="Index heures creuses jours bleus" Text="Index heures creuses jours bleus" Number="33" FunctionText="Index heures creuses jours bleus (si option Tempo) (Wh)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-34" Name="Index heures pleines jours bleus" Text="Index heures pleines jours bleus" Number="34" FunctionText="Index heures pleines jours bleus (si option Tempo) (Wh)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-35" Name="Index heures creuses jours blancs" Text="Index heures creuses jours blancs" Number="35" FunctionText="Index heures creuses jours blancs (si option Tempo) (Wh)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-36" Name="Index heures pleines jours blancs" Text="Index heures pleines jours blancs" Number="36" FunctionText="Index heures pleines jours blancs (si option Tempo) (Wh)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-37" Name="Index heures creuses jours rouges" Text="Index heures creuses jours rouges" Number="37" FunctionText="Index heures creuses jours rouges (si option Tempo) (Wh)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-38" Name="Index heures pleines jours rouges" Text="Index heures pleines jours rouges" Number="38" FunctionText="Index heures pleines jours rouges (si option Tempo) (Wh)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-39" Name="Préavis EJP" Text="Préavis EJP" Number="39" FunctionText="Préavis EJP (si option EJP) (min)" ObjectSize="2 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-40" Name="Période tarifaire en cours" Text="Période tarifaire en cours" Number="40" FunctionText="Période tarifaire en cours: 0=Base, 1=HC, 2=HP, 3=HN, 4=PM, 5=HCJB, 6=HCJW, 7=HCJR, 8=HPJB, 9=HPJW, 10=HPJR" ObjectSize="1 Byte" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-41" Name="Couleur du lendemain" Text="Couleur du lendemain" Number="41" FunctionText="Couleur du lendemain (si option Tempo): 0=Inconnu, 1=Bleu, 2=Blanc, 3=Rouge" ObjectSize="1 Byte" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-42" Name="Intensité instantanée" Text="Intensité instantanée" Number="42" FunctionText="Intensité instantanée (A)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-43" Name="Avertissement de dépassement" Text="Avertissement de dépassement" Number="43" FunctionText="Avertissement de dépassement de puissance souscrite (A)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-44" Name="Intensité maximale" Text="Intensité maximale" Number="44" FunctionText="Intensité maximale (A)" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-45" Name="Puissance apparente" Text="Puissance apparente" Number="45" FunctionText="Puissance apparente (VA)" ObjectSize="2 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-46" Name="Groupe horaire" Text="Groupe horaire" Number="46" FunctionText="Groupe horaire (si option Heures Creuses ou Tempo): A, C, D, E ou Y correspondant à la programmation du compteur" ObjectSize="1 Byte" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-47" Name="Intensité instantanée (Phase 1)" Text="Intensité instantanée (Phase 1)" Number="47" FunctionText="Intensité instantanée (A) (Phase 1) - Triphasé" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-48" Name="Intensité instantanée (Phase 2)" Text="Intensité instantanée (Phase 2)" Number="48" FunctionText="Intensité instantanée (A) (Phase 2) - Triphasé" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-49" Name="Intensité instantanée (Phase 3)" Text="Intensité instantanée (Phase 3)" Number="49" FunctionText="Intensité instantanée (A) (Phase 3) - Triphasé" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-50" Name="Intensité maximale (Phase 1)" Text="Intensité maximale (Phase 1)" Number="50" FunctionText="Intensité maximale (A) Phase 1) - Triphasé" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-51" Name="Intensité maximale (Phase 2)" Text="Intensité maximale (Phase 2)" Number="51" FunctionText="Intensité maximale (A) (Phase 2) - Triphasé" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-52" Name="Intensité maximale (Phase 3)" Text="Intensité maximale (Phase 3)" Number="52" FunctionText="Intensité maximale (A) (Phase 3) - Triphasé" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
+              <ComObject Id="M-00FA_A-0001-10-0000_O-53" Name="Puissance maximale atteinte" Text="Puissance maximale atteinte" Number="53" FunctionText="Puissance maximale atteinte (W) - Triphasé" ObjectSize="4 Bytes" ReadFlag="Enabled" WriteFlag="Disabled" CommunicationFlag="Enabled" TransmitFlag="Enabled" UpdateFlag="Disabled" ReadOnInitFlag="Disabled" />
             </ComObjectTable>
             <ComObjectRefs>
-              <ComObjectRef Id="M-00FA_A-0001-01-0000_O-1_R-1" RefId="M-00FA_A-0001-01-0000_O-1" />
-              <ComObjectRef Id="M-00FA_A-0001-01-0000_O-2_R-2" RefId="M-00FA_A-0001-01-0000_O-2" />
-              <ComObjectRef Id="M-00FA_A-0001-01-0000_O-3_R-3" RefId="M-00FA_A-0001-01-0000_O-3" />
-              <ComObjectRef Id="M-00FA_A-0001-01-0000_O-4_R-4" RefId="M-00FA_A-0001-01-0000_O-4" />
-              <ComObjectRef Id="M-00FA_A-0001-01-0000_O-5_R-5" RefId="M-00FA_A-0001-01-0000_O-5" />
-              <ComObjectRef Id="M-00FA_A-0001-01-0000_O-6_R-6" RefId="M-00FA_A-0001-01-0000_O-6" />
-              <ComObjectRef Id="M-00FA_A-0001-01-0000_O-7_R-7" RefId="M-00FA_A-0001-01-0000_O-7" />
-              <ComObjectRef Id="M-00FA_A-0001-01-0000_O-8_R-8" RefId="M-00FA_A-0001-01-0000_O-8" />
-              <ComObjectRef Id="M-00FA_A-0001-01-0000_O-9_R-9" RefId="M-00FA_A-0001-01-0000_O-9" />
-              <ComObjectRef Id="M-00FA_A-0001-01-0000_O-10_R-10" RefId="M-00FA_A-0001-01-0000_O-10" />
-              <ComObjectRef Id="M-00FA_A-0001-01-0000_O-11_R-11" RefId="M-00FA_A-0001-01-0000_O-11" />
-              <ComObjectRef Id="M-00FA_A-0001-01-0000_O-12_R-12" RefId="M-00FA_A-0001-01-0000_O-12" />
-              <ComObjectRef Id="M-00FA_A-0001-01-0000_O-13_R-13" RefId="M-00FA_A-0001-01-0000_O-13" />
-              <ComObjectRef Id="M-00FA_A-0001-01-0000_O-14_R-14" RefId="M-00FA_A-0001-01-0000_O-14" />
-              <ComObjectRef Id="M-00FA_A-0001-01-0000_O-15_R-15" RefId="M-00FA_A-0001-01-0000_O-15" />
-              <ComObjectRef Id="M-00FA_A-0001-01-0000_O-16_R-16" RefId="M-00FA_A-0001-01-0000_O-16" />
-              <ComObjectRef Id="M-00FA_A-0001-01-0000_O-17_R-17" RefId="M-00FA_A-0001-01-0000_O-17" />
-              <ComObjectRef Id="M-00FA_A-0001-01-0000_O-18_R-18" RefId="M-00FA_A-0001-01-0000_O-18" />
-              <ComObjectRef Id="M-00FA_A-0001-01-0000_O-19_R-19" RefId="M-00FA_A-0001-01-0000_O-19" />
-              <ComObjectRef Id="M-00FA_A-0001-01-0000_O-20_R-20" RefId="M-00FA_A-0001-01-0000_O-20" />
-              <ComObjectRef Id="M-00FA_A-0001-01-0000_O-21_R-21" RefId="M-00FA_A-0001-01-0000_O-21" />
-              <ComObjectRef Id="M-00FA_A-0001-01-0000_O-22_R-22" RefId="M-00FA_A-0001-01-0000_O-22" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-1_R-1" RefId="M-00FA_A-0001-10-0000_O-1" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-2_R-2" RefId="M-00FA_A-0001-10-0000_O-2" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-3_R-3" RefId="M-00FA_A-0001-10-0000_O-3" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-4_R-4" RefId="M-00FA_A-0001-10-0000_O-4" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-5_R-5" RefId="M-00FA_A-0001-10-0000_O-5" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-6_R-6" RefId="M-00FA_A-0001-10-0000_O-6" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-7_R-7" RefId="M-00FA_A-0001-10-0000_O-7" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-8_R-8" RefId="M-00FA_A-0001-10-0000_O-8" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-9_R-9" RefId="M-00FA_A-0001-10-0000_O-9" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-10_R-10" RefId="M-00FA_A-0001-10-0000_O-10" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-11_R-11" RefId="M-00FA_A-0001-10-0000_O-11" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-12_R-12" RefId="M-00FA_A-0001-10-0000_O-12" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-13_R-13" RefId="M-00FA_A-0001-10-0000_O-13" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-14_R-14" RefId="M-00FA_A-0001-10-0000_O-14" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-15_R-15" RefId="M-00FA_A-0001-10-0000_O-15" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-16_R-16" RefId="M-00FA_A-0001-10-0000_O-16" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-17_R-17" RefId="M-00FA_A-0001-10-0000_O-17" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-18_R-18" RefId="M-00FA_A-0001-10-0000_O-18" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-19_R-19" RefId="M-00FA_A-0001-10-0000_O-19" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-20_R-20" RefId="M-00FA_A-0001-10-0000_O-20" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-21_R-21" RefId="M-00FA_A-0001-10-0000_O-21" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-22_R-22" RefId="M-00FA_A-0001-10-0000_O-22" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-23_R-23" RefId="M-00FA_A-0001-10-0000_O-23" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-24_R-24" RefId="M-00FA_A-0001-10-0000_O-24" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-25_R-25" RefId="M-00FA_A-0001-10-0000_O-25" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-26_R-26" RefId="M-00FA_A-0001-10-0000_O-26" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-27_R-27" RefId="M-00FA_A-0001-10-0000_O-27" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-28_R-28" RefId="M-00FA_A-0001-10-0000_O-28" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-29_R-29" RefId="M-00FA_A-0001-10-0000_O-29" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-30_R-30" RefId="M-00FA_A-0001-10-0000_O-30" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-31_R-31" RefId="M-00FA_A-0001-10-0000_O-31" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-32_R-32" RefId="M-00FA_A-0001-10-0000_O-32" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-33_R-33" RefId="M-00FA_A-0001-10-0000_O-33" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-34_R-34" RefId="M-00FA_A-0001-10-0000_O-34" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-35_R-35" RefId="M-00FA_A-0001-10-0000_O-35" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-36_R-36" RefId="M-00FA_A-0001-10-0000_O-36" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-37_R-37" RefId="M-00FA_A-0001-10-0000_O-37" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-38_R-38" RefId="M-00FA_A-0001-10-0000_O-38" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-39_R-39" RefId="M-00FA_A-0001-10-0000_O-39" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-40_R-40" RefId="M-00FA_A-0001-10-0000_O-40" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-41_R-41" RefId="M-00FA_A-0001-10-0000_O-41" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-42_R-42" RefId="M-00FA_A-0001-10-0000_O-42" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-43_R-43" RefId="M-00FA_A-0001-10-0000_O-43" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-44_R-44" RefId="M-00FA_A-0001-10-0000_O-44" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-45_R-45" RefId="M-00FA_A-0001-10-0000_O-45" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-46_R-46" RefId="M-00FA_A-0001-10-0000_O-46" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-47_R-47" RefId="M-00FA_A-0001-10-0000_O-47" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-48_R-48" RefId="M-00FA_A-0001-10-0000_O-48" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-49_R-49" RefId="M-00FA_A-0001-10-0000_O-49" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-50_R-50" RefId="M-00FA_A-0001-10-0000_O-50" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-51_R-51" RefId="M-00FA_A-0001-10-0000_O-51" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-52_R-52" RefId="M-00FA_A-0001-10-0000_O-52" />
+              <ComObjectRef Id="M-00FA_A-0001-10-0000_O-53_R-53" RefId="M-00FA_A-0001-10-0000_O-53" />
             </ComObjectRefs>
             <AddressTable MaxEntries="65535" />
             <AssociationTable MaxEntries="65535" />
             <LoadProcedures>
               <LoadProcedure MergeId="2">
-                <LdCtrlRelSegment LsmIdx="4" Size="0" Mode="0" Fill="0" AppliesTo="full" />
+                <LdCtrlRelSegment AppliesTo="full" LsmIdx="4" Size="12" Mode="1" Fill="0" />
+                <LdCtrlRelSegment AppliesTo="par" LsmIdx="4" Size="12" Mode="0" Fill="0" />
               </LoadProcedure>
               <LoadProcedure MergeId="4">
-                <LdCtrlWriteRelMem ObjIdx="4" Offset="0" Size="0" Verify="true" />
+                <LdCtrlWriteRelMem AppliesTo="full,par" ObjIdx="4" Offset="0" Size="12" Verify="true" />
+              </LoadProcedure>
+              <LoadProcedure MergeId="7">
+                <LdCtrlLoadImageProp ObjIdx="4" PropId="27" />
               </LoadProcedure>
             </LoadProcedures>
             <Options />
           </Static>
           <Dynamic>
             <ChannelIndependentBlock>
-              <ParameterBlock Id="M-00FA_A-0001-01-0000_PB-1" Name="ParameterPage" Text="Common Parameters">
-                <ComObjectRefRef RefId="M-00FA_A-0001-01-0000_O-1_R-1" />
-                <ComObjectRefRef RefId="M-00FA_A-0001-01-0000_O-2_R-2" />
-                <ComObjectRefRef RefId="M-00FA_A-0001-01-0000_O-3_R-3" />
-                <ComObjectRefRef RefId="M-00FA_A-0001-01-0000_O-4_R-4" />
-                <ComObjectRefRef RefId="M-00FA_A-0001-01-0000_O-5_R-5" />
-                <ComObjectRefRef RefId="M-00FA_A-0001-01-0000_O-6_R-6" />
-                <ComObjectRefRef RefId="M-00FA_A-0001-01-0000_O-7_R-7" />
-                <ComObjectRefRef RefId="M-00FA_A-0001-01-0000_O-8_R-8" />
-                <ComObjectRefRef RefId="M-00FA_A-0001-01-0000_O-9_R-9" />
-                <ComObjectRefRef RefId="M-00FA_A-0001-01-0000_O-10_R-10" />
-                <ComObjectRefRef RefId="M-00FA_A-0001-01-0000_O-11_R-11" />
-                <ComObjectRefRef RefId="M-00FA_A-0001-01-0000_O-12_R-12" />
-                <ComObjectRefRef RefId="M-00FA_A-0001-01-0000_O-13_R-13" />
-                <ComObjectRefRef RefId="M-00FA_A-0001-01-0000_O-14_R-14" />
-                <ComObjectRefRef RefId="M-00FA_A-0001-01-0000_O-15_R-15" />
-                <ComObjectRefRef RefId="M-00FA_A-0001-01-0000_O-16_R-16" />
-                <ComObjectRefRef RefId="M-00FA_A-0001-01-0000_O-17_R-17" />
-                <ComObjectRefRef RefId="M-00FA_A-0001-01-0000_O-18_R-18" />
-                <ComObjectRefRef RefId="M-00FA_A-0001-01-0000_O-19_R-19" />
-                <ComObjectRefRef RefId="M-00FA_A-0001-01-0000_O-20_R-20" />
-                <ComObjectRefRef RefId="M-00FA_A-0001-01-0000_O-21_R-21" />
-                <ComObjectRefRef RefId="M-00FA_A-0001-01-0000_O-22_R-22" />
+              <ParameterBlock Id="M-00FA_A-0001-10-0000_PB-1" Name="TeleInfo" Text="TéléInfo">
+                <ParameterRefRef RefId="M-00FA_A-0001-10-0000_P-2_R-2" />
+                <ParameterRefRef RefId="M-00FA_A-0001-10-0000_P-3_R-3" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-1_R-1" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-2_R-2" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-3_R-3" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-4_R-4" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-5_R-5" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-6_R-6" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-7_R-7" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-8_R-8" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-9_R-9" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-10_R-10" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-11_R-11" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-12_R-12" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-13_R-13" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-14_R-14" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-15_R-15" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-16_R-16" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-17_R-17" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-18_R-18" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-19_R-19" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-20_R-20" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-21_R-21" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-22_R-22" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-23_R-23" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-24_R-24" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-25_R-25" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-26_R-26" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-27_R-27" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-28_R-28" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-29_R-29" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-30_R-30" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-31_R-31" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-32_R-32" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-33_R-33" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-34_R-34" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-35_R-35" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-36_R-36" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-37_R-37" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-38_R-38" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-39_R-39" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-40_R-40" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-41_R-41" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-42_R-42" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-43_R-43" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-44_R-44" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-45_R-45" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-46_R-46" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-47_R-47" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-48_R-48" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-49_R-49" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-50_R-50" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-51_R-51" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-52_R-52" />
+                <ComObjectRefRef RefId="M-00FA_A-0001-10-0000_O-53_R-53" />
+              </ParameterBlock>
+              <ParameterBlock Id="M-00FA_A-0001-10-0000_PB-2" Name="Clock" Text="Horloge">
+                <ParameterRefRef RefId="M-00FA_A-0001-10-0000_P-1_R-1" />
               </ParameterBlock>
             </ChannelIndependentBlock>
           </Dynamic>
         </ApplicationProgram>
       </ApplicationPrograms>
       <Hardware>
-        <Hardware Id="M-00FA_H-LNKY-1" Name="TELEINFO_LINKY" SerialNumber="LNKY" VersionNumber="1" BusCurrent="10" HasIndividualAddress="true" HasApplicationProgram="true">
+        <Hardware Id="M-00FA_H-ZDI.2DTELEINFO-1" Name="ZDI-TELEINFO" SerialNumber="ZDI-TELEINFO" VersionNumber="1" BusCurrent="10" HasIndividualAddress="true" HasApplicationProgram="true">
           <Products>
-            <Product Id="M-00FA_H-LNKY-1_P-1" Text="TELEINFO" OrderNumber="1" IsRailMounted="false" DefaultLanguage="fr">
+            <Product Id="M-00FA_H-ZDI.2DTELEINFO-1_P-ZDI.2DTINFO1" Text="TELEINFO" OrderNumber="ZDI-TINFO1" IsRailMounted="true" DefaultLanguage="fr" Hash="W/gNxVwfkdk9xIMY58JK0pt3gu0=">
               <RegistrationInfo RegistrationStatus="Registered" />
             </Product>
           </Products>
           <Hardware2Programs>
-            <Hardware2Program Id="M-00FA_H-LNKY-1_HP-0001-01-0000" MediumTypes="MT-0">
-              <ApplicationProgramRef RefId="M-00FA_A-0001-01-0000" />
-              <RegistrationInfo RegistrationStatus="Registered" RegistrationNumber="0001/11" />
+            <Hardware2Program Id="M-00FA_H-ZDI.2DTELEINFO-1_HP-0001-10-0000" MediumTypes="MT-0" Hash="VJM0IKyF2OXglg+LZgSr97tmzW4=">
+              <ApplicationProgramRef RefId="M-00FA_A-0001-10-0000" />
+              <RegistrationInfo RegistrationStatus="Registered" RegistrationNumber="0001/116" />
             </Hardware2Program>
           </Hardware2Programs>
         </Hardware>
